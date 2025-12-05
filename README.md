@@ -64,5 +64,51 @@ http://backend-service:5000/api
 - Add Horizontal Pod Autoscaler for dynamic scaling.
 - Integrate centralized logging and monitoring.
 - Use Secrets for sensitive configuration if required.
+============================================================================================================================================
+
+**MONITORING**
+
+## Monitoring Strategy
+
+For monitoring, I would use the standard Prometheus + Grafana stack for metrics and Loki for logs:
+
+- Prometheus: metrics collection and alerting
+- Alertmanager: routing alerts to channels (e.g. email/Slack) – conceptually included
+- Grafana: visualization of application and cluster metrics
+- Loki & Promtail: centralized log aggregation from pods
+
+### Metrics
+
+- Application metrics exposed via `/metrics` endpoints on both frontend and backend (Prometheus format).
+- Container, pod, and node-level metrics via standard Kubernetes exporters:
+  - `kube-state-metrics` (pod restarts, readiness)
+  - `node-exporter` (CPU, memory usage)
+- Prometheus scrapes:
+  - Frontend service
+  - Backend service
+  - Kubernetes/system exporters
+
+### Logs
+
+- Promtail runs on each node, tails container logs from `/var/log/containers/` and forwards them to Loki.
+- Logs are labeled by namespace, pod, container, and app.
+- Grafana is used to query Loki and correlate logs with metrics during debugging.
+
+### Alerts
+
+Three critical alerts are defined in Prometheus:
+
+1. Pod restart frequency – Detects unstable pods restarting too often.
+2. High CPU/Memory usage – Protects from resource exhaustion.
+3. Service availability – Detects when frontend or backend is down.
+
+These alerts would be sent via Alertmanager to email/Slack in a real setup.
+
+### Application Metrics collection
+
+- Backend exposes application metrics at `/metrics` (e.g. using Prometheus client library).
+- Frontend metrics are exposed via an Nginx Prometheus exporter.
+
+
 
 
