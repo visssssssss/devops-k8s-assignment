@@ -45,9 +45,11 @@ kubectl apply -f frontend/
 ## How to access the application 
 
 Frontend 
+
 http://<node-ip>:30080
 
 Backend
+
 http://backend-service:5000/api
 
 ## Production Considerations
