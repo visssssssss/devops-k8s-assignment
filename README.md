@@ -91,8 +91,10 @@ For monitoring, I would use the standard Prometheus + Grafana stack for metrics 
 ### Logs
 
 - Promtail runs on each node, tails container logs from `/var/log/containers/` and forwards them to Loki.
-- Logs are labeled by namespace, pod, container, and app.
+- Logs are pushed to Loki and can be queried in Grafana using labels such as `namespace`, `pod`, and `container`.
 - Grafana is used to query Loki and correlate logs with metrics during debugging.
+- This allows correlating errors in logs with spikes in metrics or alerts.
+
 
 ### Alerts
 
