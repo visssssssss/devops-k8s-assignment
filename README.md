@@ -41,29 +41,7 @@ The frontend is exposed externally, while the backend remains accessible only wi
 The manifests were tested on a local Kubernetes cluster (e.g., Minikube or Kind).
 
 ```bash
-kubectl apply -f backend/
-kubectl apply -f frontend/
 
-## How to access the application 
-
-Frontend 
-http://<node-ip>:30080
-
-Backend
-http://backend-service:5000/api
-
-## Production Considerations
-
-- Resource requests and limits are defined to prevent resource starvation.
-- Liveness and readiness probes enable Kubernetes to detect unhealthy pods and route traffic safely.
-- Backend service is exposed internally only using ClusterIP.
-
-## Future Improvements
-
-- Use a Loadbalancer/Ingress controller with TLS for secure external access.
-- Add Horizontal Pod Autoscaler for dynamic scaling.
-- Integrate centralized logging and monitoring.
-- Use Secrets for sensitive configuration if required.
 
 
 
