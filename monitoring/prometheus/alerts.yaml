@@ -1,0 +1,44 @@
+groups:
+  - name: application-alerts
+    rules:
+      # Pod restart frequency
+      - alert: HighPodRestartRate
+        expr: increase(kube_pod_container_status_restarts_total{namespace="default"}[5m]) > 3
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High restart rate for pods in default namespace"
+          description: "Pod {{ $labels.pod }} restarted more than 3 times in the last 5 minutes."
+
+      # High CPU usage for frontend/backend
+      - alert: HighCPUUsage
+        expr: avg by (pod) (
+          rate(container_cpu_usage_seconds_total{namespace="default", pod=~"frontend.*|backend.*"}[5m])
+        ) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage for {{ $labels.pod }}"
+          description: "Average CPU usage for pod {{ $labels.pod }} is above 80% over the last 5 minutes."
+
+      # Service availability (backend down)
+      - alert: BackendServiceDown
+        expr: up{job="backend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend service is down"
+          description: "No healthy targets for the backend job in Prometheus for more than 1 minute."
+
+      # Frontend availability
+      - alert: FrontendServiceDown
+        expr: up{job="frontend"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Frontend service is down"
+          description: "No healthy targets for the frontend job in Prometheus for more than 1 minute."
