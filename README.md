@@ -38,9 +38,8 @@ The frontend is exposed externally, while the backend remains accessible only wi
 
 ## How to Deploy
 
-The manifests were tested on a local Kubernetes cluster (e.g., Minikube or Kind).
-
 kubectl apply -f backend/
+
 kubectl apply -f frontend/
 
 ## How to access the application 
